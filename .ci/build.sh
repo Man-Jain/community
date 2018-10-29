@@ -3,51 +3,53 @@
 set -e -x
 
 rm db.sqlite3 || true
-rm -rf private _site public
+#rm -rf private _site public
 
-mkdir private _site public
+#mkdir private _site public
 
 META_REVIEW_DATA="meta_review.json"
 
-EXPORTED_DATA="static/tasks.yaml static/instances.yaml static/$META_REVIEW_DATA"
+EXPORTED_DATA="static/tasks.yaml static/instances.yaml static/$META_REVIEW_DATA\
+ static/non_issue_tasks.yaml"
 
 ISSUES_JSON="issues.json"
 
-python manage.py fetch_deployed_data --allow-failure _site $EXPORTED_DATA
+#python manage.py fetch_deployed_data --allow-failure _site $EXPORTED_DATA
 
 if [[ -n "$GCI_TOKEN" ]]; then
-  python manage.py fetch_gci_task_data private
-  python manage.py cleanse_gci_task_data private _site
+#  python manage.py fetch_gci_task_data private
+#  python manage.py cleanse_gci_task_data private _site
+  python manage.py filter_gci_non_issue_tasks private _site
   rm -rf private/
 fi
 
 # fetch deployed issues data in gh-board repo
-python manage.py fetch_deployed_data _site $ISSUES_JSON \
-                 --repo-name gh-board --hoster github
+#python manage.py fetch_deployed_data _site $ISSUES_JSON \
+#                 --repo-name gh-board --hoster github
 
-python manage.py migrate
-python manage.py import_contributors_data
-python manage.py import_issues_data
-python manage.py import_merge_requests_data
-python manage.py create_config_data
-python manage.py create_participants
-python manage.py update_participants_data
+#python manage.py migrate
+#python manage.py import_contributors_data
+#python manage.py import_issues_data
+#python manage.py import_merge_requests_data
+#python manage.py create_config_data
+#python manage.py create_participants
+#python manage.py update_participants_data
 
-if [[ -f "_site/$META_REVIEW_DATA" ]]; then
-  echo "File $META_REVIEW_DATA exists."
-  # Load meta_review data
-  python manage.py loaddata _site/$META_REVIEW_DATA
-else
-  echo "File $META_REVIEW_DATA does not exist."
-fi
+#if [[ -f "_site/$META_REVIEW_DATA" ]]; then
+#  echo "File $META_REVIEW_DATA exists."
+#  # Load meta_review data
+#  python manage.py loaddata _site/$META_REVIEW_DATA
+#else
+#  echo "File $META_REVIEW_DATA does not exist."
+#fi
 
 # Run meta review system
-python manage.py run_meta_review_system
+#python manage.py run_meta_review_system
 
-rm _site/$ISSUES_JSON
+#rm _site/$ISSUES_JSON
 
 # Dump meta_review data
-python manage.py dumpdata meta_review > _site/$META_REVIEW_DATA
+#python manage.py dumpdata meta_review > _site/$META_REVIEW_DATA
 
-python manage.py collectstatic --noinput
-python manage.py distill-local public --force
+#python manage.py collectstatic --noinput
+#python manage.py distill-local public --force

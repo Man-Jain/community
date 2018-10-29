@@ -552,7 +552,6 @@ cscope.po.out
 
 # Django distill
 /private/
-_site/
 /public/
 
 # Pytest profile files
