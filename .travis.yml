@@ -6,7 +6,6 @@ cache:
 
 stages:
   - test
-  - moban
   - name: deploy
     if: type != pull_request
 
@@ -25,13 +24,6 @@ jobs:
     # A proper build with the tokens available
     - stage: deploy
       after_success: ./.ci/deploy.sh
-    - python: 3.6
-      stage: moban
-      env:
-      before_install: false
-      install: pip install moban
-      script: .ci/check_moban.sh
-      after_success: false
 
 before_install:
   - printf '%s\n'
