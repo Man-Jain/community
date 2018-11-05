@@ -25,7 +25,7 @@ class Command(BaseCommand):
                 tasks = yaml.load(f)
 
                 for task in tasks:
-                    external_url=tasks[task]['external_url']
+                    external_url = tasks[task]['external_url']
                     print('external issue for task is {}'.format(external_url))
                     try:
                         issue = get_issue(external_url)
